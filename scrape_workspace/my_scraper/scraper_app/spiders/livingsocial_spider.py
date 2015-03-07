@@ -40,3 +40,10 @@ class LivingSocialSpider(BaseSpider):
         	loader = XPathItemLoader(LivingSocialDeal(), selector=deal)
         
 			#define processors
+			loader.default_input_processor = MapCompose(unicode.strip)
+			loader.default_output_processor = Join()
+			
+			#iterate over fields and add xpaths to the loader
+			for field, xpath in self.item_fields.iteritems():
+				loader.add_xpath(field, xpath)
+			yield loader.load_item()
