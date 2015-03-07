@@ -10,3 +10,5 @@ DATABASE = {
 	'password': '',
 	'database': 'scrape'
 }
+
+ITEM_PIPELINES = ['scrape_app.pipelines.LivingSocialPipeline']
