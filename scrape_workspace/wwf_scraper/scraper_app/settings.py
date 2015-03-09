@@ -15,3 +15,4 @@ DATABASE = {
 	'database': 'scrape'
 }
 
+AUTOTHROTTLE_ENABLED = True
