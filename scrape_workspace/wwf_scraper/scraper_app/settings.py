@@ -12,7 +12,7 @@ DATABASE = {
 	'port': '5432',
 	'username': 'jmann',
 	'password': '',
-	'database': 'scrape'
+	'database': 'wwfscrape'
 }
 
 AUTOTHROTTLE_ENABLED = True

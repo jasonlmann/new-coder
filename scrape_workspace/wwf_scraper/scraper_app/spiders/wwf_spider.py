@@ -1,8 +1,9 @@
 from scrapy.contrib.spiders import CrawlSpider, Rule
 from scrapy.contrib.linkextractors import LinkExtractor
 
-from scrapy.selector import HtmlXPathSelector
-from scrapy.contrib.loader import XPathItemLoader
+from scrapy import Selector
+#from scrapy.selector import HtmlXPathSelector
+from scrapy.contrib.loader import ItemLoader
 from scrapy.contrib.loader.processor import Join, MapCompose
 
 from scraper_app.items import WwfArticle
@@ -15,12 +16,12 @@ class WwfSpider(CrawlSpider):
     allowed_domains = ["workingwaterfront.com"]
     start_urls = ["http://www.workingwaterfront.com/Arts"]
     
-    rules = (
-        #Extract links from bottom pagination links
-        Rule(LinkExtractor(allow=('/Articles/*'), restrict_xpaths=('//div[@id="pagingcontrols"]/a[contains(text(), "Next")]'))),
-        
+    rules = (       
         # Extract links to follow from starting category page
         Rule(LinkExtractor(allow=('/articles/*'), allow_domains=('workingwaterfront.com'), restrict_xpaths=('//div[@class="hp_feature"]/h2/a', )), callback='parse_items'),
+        
+        #Extract links from bottom pagination links
+        Rule(LinkExtractor(allow=('/Articles/*'), restrict_xpaths=('//div[@id="pagingcontrols"]/a[contains(text(), "Next")]'))),
         
     )
 
@@ -43,11 +44,11 @@ class WwfSpider(CrawlSpider):
         @returns items 1
         @scrapes title link
         """
-        selector = HtmlXPathSelector(response)
+        selector = Selector(response)
 
         # iterate over articles
         for article in selector.xpath(self.main_article_xpath):
-            loader = XPathItemLoader(WwfArticle(), selector=article)
+            loader = ItemLoader(WwfArticle(), selector=article)
 
             # define processors
             loader.default_input_processor = MapCompose(unicode.strip)
