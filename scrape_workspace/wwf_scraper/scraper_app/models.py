@@ -14,18 +14,18 @@ def db_connect():
 	return create_engine(URL(**settings.DATABASE))
 	
 
-def create_deals_table(engine):
+def create_articles_table(engine):
     """"""
     DeclarativeBase.metadata.create_all(engine)
 	
 
-class Deals(DeclarativeBase):
+class Articles(DeclarativeBase):
     """Sqlalchemy deals model"""
     __tablename__ = "articles"
 
     id = Column(Integer, primary_key=True)
     title = Column('title', String)
-    sub_hed = Coumn('sub_hed', String, nullable=True)
+    sub_hed = Column('sub_hed', String, nullable=True)
     author = Column('author', String, nullable=True)
     content = Column('content', String)
     publish_date = Column('publish_date', DateTime)

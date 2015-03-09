@@ -1,5 +1,5 @@
 from sqlalchemy.orm import sessionmaker
-from models import Deals, db_connect, create_deals_table
+from models import Articles, db_connect, create_articles_table
 
 
 class WwfPipeline(object):
@@ -13,7 +13,7 @@ class WwfPipeline(object):
         self.Session = sessionmaker(bind=engine)
 
     def process_item(self, item, spider):
-        """Save deals in the database.
+        """Save articles in the database.
 		This method is called for every item pipeline component.
 		"""
 		

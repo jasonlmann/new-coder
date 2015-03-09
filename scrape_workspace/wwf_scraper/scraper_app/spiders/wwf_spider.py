@@ -1,30 +1,36 @@
-from scrapy.spider import BaseSpider
+from scrapy.contrib.spiders import CrawlSpider, Rule
+from scrapy.contrib.linkextractors import LinkExtractor
+
 from scrapy.selector import HtmlXPathSelector
 from scrapy.contrib.loader import XPathItemLoader
 from scrapy.contrib.loader.processor import Join, MapCompose
 
 from scraper_app.items import WwfArticle
 
-class WwfSpider(BaseSpider):
+class WwfSpider(CrawlSpider):
     """
     Spider for Working Waterfront.com
     """
     name = "wwf"
     allowed_domains = ["workingwaterfront.com"]
-    start_urls = ["https://www.livingsocial.com/cities/15-san-francisco"]
+    start_urls = ["http://www.workingwaterfront.com/Arts"]
+    
+    rules = (
+        # Extract links to follow from starting category page
+        Rule(LinkExtractor(allow=('/articles/*'), allow_domains=('workingwaterfront.com'), restrict_xpaths=('//div[@class="hp_feature"]/h2/a', )), callback='parse_items'),
+    )
 
-    deals_list_xpath = '//li[@dealid]'
+    main_article_xpath = '//div[@id="article_detail"]'
 	
     item_fields = {
-        'title': './/span[@itemscope]/meta[@itemprop="name"]/@content',
-        'link': './/a/@href',
-        'location': './/a/div[@class="deal-details"]/p[@class="location"]/text()',
-        'original_price': './/a/div[@class="deal-prices"]/div[@class="deal-strikethrough-price"]/div[@class="strikethrough-wrapper"]/text()',
-        'price': './/a/div[@class="deal-prices"]/div[@class="deal-price"]/text()',
-        'end_date': './/span[@itemscope]/meta[@itemprop="availabilityEnds"]/@content'
+        'title': './/h1/text()',
+        'sub_hed': './/h2/text()',
+        'author': './/div[@class="credit"]/text()',
+        'content': './/div[@id="article_body"]/p',
+        'publish_date': './/span[@class="date"]/text()'
     }
 
-    def parse(self, response):
+    def parse_items(self, response):
         """
         Default callback used by Scrapy to process downloaded responses
 
@@ -35,9 +41,9 @@ class WwfSpider(BaseSpider):
         """
         selector = HtmlXPathSelector(response)
 
-        # iterate over deals
-        for deal in selector.xpath(self.deals_list_xpath):
-            loader = XPathItemLoader(LivingSocialDeal(), selector=deal)
+        # iterate over articles
+        for article in selector.xpath(self.main_article_xpath):
+            loader = XPathItemLoader(WwfArticle(), selector=article)
 
             # define processors
             loader.default_input_processor = MapCompose(unicode.strip)
