@@ -21,7 +21,7 @@ class WwfSpider(CrawlSpider):
         Rule(LinkExtractor(allow=('/articles/*'), allow_domains=('workingwaterfront.com'), restrict_xpaths=('//div[@class="hp_feature"]/h2/a', )), callback='parse_items'),
         
         #Extract links from bottom pagination links
-        Rule(LinkExtractor(allow=('/Articles/*'), restrict_xpaths=('//div[@id="pagingcontrols"]/a[contains(text(), "Next")]'))),
+        Rule(LinkExtractor(restrict_xpaths=('//div[@id="pagingcontrols"]/a[contains(text(), "Next")]'))),
         
     )
 
