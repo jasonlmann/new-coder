@@ -2,7 +2,9 @@ BOT_NAME = 'wwf'
 
 SPIDER_MODULES = ['scraper_app.spiders']
 
-ITEM_PIPELINES = ['scraper_app.pipelines.WwfPipeline']
+ITEM_PIPELINES = {
+    'scraper_app.pipelines.WwfPipeline': 300,
+}
 
 DATABASE = {
 	'drivername': 'postgres',

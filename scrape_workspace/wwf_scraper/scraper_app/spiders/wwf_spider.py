@@ -16,8 +16,12 @@ class WwfSpider(CrawlSpider):
     start_urls = ["http://www.workingwaterfront.com/Arts"]
     
     rules = (
+        #Extract links from bottom pagination links
+        Rule(LinkExtractor(allow=('/Articles/*'), restrict_xpaths=('//div[@id="pagingcontrols"]/a[contains(text(), "Next")]'))),
+        
         # Extract links to follow from starting category page
         Rule(LinkExtractor(allow=('/articles/*'), allow_domains=('workingwaterfront.com'), restrict_xpaths=('//div[@class="hp_feature"]/h2/a', )), callback='parse_items'),
+        
     )
 
     main_article_xpath = '//div[@id="article_detail"]'
