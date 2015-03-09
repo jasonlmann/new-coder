@@ -14,7 +14,7 @@ class WwfSpider(CrawlSpider):
     """
     name = "wwf"
     allowed_domains = ["workingwaterfront.com"]
-    start_urls = ["http://www.workingwaterfront.com/Arts"]
+    start_urls = ["http://www.workingwaterfront.com/Articles/"]
     
     rules = (       
         # Extract links to follow from starting category page
